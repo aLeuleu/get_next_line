@@ -1,5 +1,5 @@
-111222333444555666777888999A
-sSSSSSSSSSSSSSS7
-ddddddddddddddddddd7
-fffffffffffffffffff7
+[0]111222333444555666777888999A[1]
+[2]SSSSSSSSSSSSS[3]
+*dddddddddddddddddd7
+*ffffffffffffffffff7
 
