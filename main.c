@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c.old                                         :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 00:42:41 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/16 17:15:19 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/16 19:26:54 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int argc, char const *argv[])
 
 	int	fd;
 
-	fd = open("./mon_fichier.txt", O_RDONLY);
+	fd = open("./empty.txt", O_RDONLY);
 
 	printf("1 : \"%s\"\n", get_next_line(fd));
 	printf("2 : \"%s\"\n", get_next_line(fd));

@@ -6,7 +6,7 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 15:17:21 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/16 16:53:13 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/16 19:26:21 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 		return (size);
 	while (dst[j] && j < size)
 		j++;
-	while (src[i] && ((j + i + 1) < size))
+	while (src[i] > 0 && ((j + i + 1) < size))
 	{
 		dst[j + i] = src[i];
 		i++;
