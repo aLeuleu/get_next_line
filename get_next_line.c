@@ -6,20 +6,16 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/15 18:38:51 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/16 01:01:33 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
-#endif
+#include "get_next_line.h"
 
 static size_t	ft_strlen(const char *s)
 {
@@ -107,7 +103,7 @@ static size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	return (j + ft_strlen((char *)src));
 }
 
-static int	contains_endl(char *str)
+static int	contains_endl_or_eof(char *str)
 {
 	size_t	i;
 
@@ -153,7 +149,6 @@ char	*realloc_by_buffer(char *oldstr, size_t newstr_size)
 
 #include <fcntl.h>
 #include <stddef.h>
-#include <stdio.h>
 
 int	strlen_untill(char *str, char delimiter)
 {
@@ -170,17 +165,20 @@ char	*get_next_line(int fd)
 	char		*next_line;
 	size_t		i;
 	static char	buffer[BUFFER_SIZE];
-	int			len_untill_nl_or_eof;
+	int			len_untill_nl;
+	static int	eof_reached;
 	
 	next_line = NULL;
 	i = 1;
+	if (eof_reached || BUFFER_SIZE < 0)
+		return (NULL);
 /* 	if (strlen_untill(&buffer[0],'\n') < buffer + BUFFER_SIZE)
 		 buffer = memncpy(buffer + strlen_untill(&buffer[0],'\n'); 
 		 next_line = realloc_by_buffer(next_line, strlen_untill .. );
 		 next_line = memncpy buffer -->  strlen_untill( ...
 		 */
 
-	while (!contains_endl(buffer) && i < 10)
+	while (!contains_endl_or_eof(buffer) || eof_reached)
 	{
 			//printf("\n\n----------------\nboucle %ld\n", i );
 			//printf("allocation de next_line : %ld\n",( BUFFER_SIZE * i) + 1);
@@ -197,7 +195,7 @@ char	*get_next_line(int fd)
 		{	
 			//printf("next_line : \"%s\"\n", next_line);
 		}
-		read(fd, buffer, BUFFER_SIZE);
+		eof_reached = !read(fd, buffer, BUFFER_SIZE);
 			//write(1,"nouveau buffer :\"", 17 );
 			//write(1,buffer, BUFFER_SIZE );
 			//write(1,"\"\n\n",3);
@@ -206,46 +204,27 @@ char	*get_next_line(int fd)
 		//printf("\n\n----------------\nboucle %ld (fin)\n", i );
 		//if (next_line)
 			//printf("ft_strlen(next_line) : %ld \n", ft_strlen(next_line) );
-	len_untill_nl_or_eof = strlen_untill(&buffer[0],'\n') +1;
-		//printf("len_untill_nl_or_eof : %d\n", len_untill_nl_or_eof);
+		len_untill_nl = strlen_untill(&buffer[0],'\n') +1;
 
-		//printf("allocation de next_line : %ld\n", ft_strlen(next_line)
-		//		+len_untill_nl_or_eof);
-	next_line = realloc_by_buffer(next_line, ft_strlen(next_line)
-				+len_untill_nl_or_eof);
-	ft_strlcat(next_line, buffer, ft_strlen(next_line)
-				+len_untill_nl_or_eof);
-		//printf("next_line : \"%s\"\n", next_line);
-
-	ft_memcpy(buffer, buffer + len_untill_nl_or_eof, BUFFER_SIZE - len_untill_nl_or_eof );
+		//printf("len_untill_nl : %d\n", len_untill_nl);
 		//write(1,"nouveau buffer :\"", 17 );
 		//write(1,buffer, BUFFER_SIZE );
 		//write(1,"\"\n\n",3);
-	ft_memset(buffer +(BUFFER_SIZE - len_untill_nl_or_eof), 0, len_untill_nl_or_eof);
+		//printf("allocation de next_line : %ld\n", ft_strlen(next_line)
+		//		+len_untill_nl);
+	next_line = realloc_by_buffer(next_line, ft_strlen(next_line)
+				+len_untill_nl);
+	ft_strlcat(next_line, buffer, ft_strlen(next_line)
+				+len_untill_nl);
+		//printf("next_line : \"%s\"\n", next_line);
+
+	ft_memcpy(buffer, buffer + len_untill_nl, BUFFER_SIZE - len_untill_nl );
+		//write(1,"nouveau buffer :\"", 17 );
+		//write(1,buffer, BUFFER_SIZE );
+		//write(1,"\"\n\n",3);
+	ft_memset(buffer +(BUFFER_SIZE - len_untill_nl), 0, len_untill_nl);
 		//write(1,"nouveau buffer :\"", 17 );
 		//write(1,buffer, BUFFER_SIZE );
 		//write(1,"\"\n\n",3);
 	return (next_line);
 	}
-
-
-int	main(int argc, char const *argv[])
-{
-	int	fd;
-
-	fd = open("./mon_fichier.txt", O_RDONLY);
-	printf("1 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-	printf("2 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-	printf("3 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-	printf("4 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-	printf("5 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-	printf("6 : %s\n", get_next_line(fd));
-	printf("************\n\n\n");
-}
-// todo gerer les cas ou le file est deja entierement read
-// ca ne sert a rien de faire un fd status si on a perdu ce que l'on a lu apres le \n ! .. il faut sauvegarder ca quelque part .......
