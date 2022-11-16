@@ -6,7 +6,7 @@
 #    By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 20:55:17 by alevra            #+#    #+#              #
-#    Updated: 2022/11/12 10:02:24 by alevra           ###   ########lyon.fr    #
+#    Updated: 2022/11/16 17:14:27 by alevra           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,13 +14,14 @@ NAME = get_next_line
 
 HEADER = get_next_line.h
 
-SRC =	ft_memset.c		\
+SRC =	get_next_line.c		\
+		get_next_line_utils.c \
 
-BONUS_SRC =	
+#BONUS_SRC =	
+
+#BONUS_OBJ = $(BONUS_SRC:.c=.o)
 
 OBJ = $(SRC:.c=.o)
-
-BONUS_OBJ = $(BONUS_SRC:.c=.o)
 
 all	: $(NAME)
 

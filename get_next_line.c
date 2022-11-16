@@ -6,7 +6,7 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/16 16:37:26 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/16 18:19:59 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,9 @@ char	*get_next_line(int fd)
 		append_next_line_and_read_buffer(&next_line, buffer, fd, i++);
 	len_untill_nl_or_eof = strlen_untill(&buffer[0], '\n') + 1;
 	next_line = realloc_by_buffer(next_line, ft_strlen(next_line)
-			+ len_untill_nl_or_eof);
+			+ len_untill_nl_or_eof + 1);
 	ft_strlcat(next_line, buffer, ft_strlen(next_line) + len_untill_nl_or_eof);
+	ft_strlcat(next_line, "\n", ft_strlen(next_line) + len_untill_nl_or_eof + 1);
 	ft_memcpy(buffer, buffer + len_untill_nl_or_eof, BUFFER_SIZE
 		- len_untill_nl_or_eof);
 	if (buffer[BUFFER_SIZE - 1] != -1)
