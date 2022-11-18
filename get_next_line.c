@@ -6,13 +6,13 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/16 19:38:07 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/18 18:28:01 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "main.c"
 #include "get_next_line_utils.c"
-
 int	contains_endl_or_eof(char *str)
 {
 	size_t	i;
@@ -28,77 +28,57 @@ int	contains_endl_or_eof(char *str)
 	return (0);
 }
 
-char	*realloc(char *oldstr, size_t newstr_size)
-{
-	char	*newstr;
-
-	if (!newstr_size)
-		newstr = (char *)ft_calloc(1, sizeof(char));
-	else
-		newstr = (char *)ft_calloc(newstr_size, sizeof(char));
-	if (!newstr)
-	{
-		if (oldstr)
-			free(oldstr);
-		return (NULL);
-	}
-	if (oldstr)
-	{
-		ft_strlcat(newstr, oldstr, newstr_size);
-		free(oldstr);
-	}
-	return (newstr);
-}
-
-int	strlen_untill(char *str, char delimiter)
-{
-	size_t	len;
-
-	len = 0;
-	while (str && str[len] > 0 && str[len] != delimiter)
-		len++;
-	return (len);
-}
-
-void	append_next_line_and_read_buffer(char **next_line, char *buffer, int fd,
-		int i)
+void	read_buffer(char *buffer, int fd)
 {
 	int	byte_read;
 
-	(*next_line) = realloc((*next_line), (BUFFER_SIZE * i) + 1);
-	ft_strlcat((*next_line), buffer, (BUFFER_SIZE * i) + 1);
 	byte_read = read(fd, buffer, BUFFER_SIZE);
 	ft_memset(buffer + byte_read, -1, (BUFFER_SIZE - byte_read));
 }
 
-char	*get_next_line(int fd)
+void	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
 {
-	char		*next_line;
-	size_t		i;
-	static char	buffer[BUFFER_SIZE];
-	int			len_untill_nl_or_eof;
-	int			len_next_line;
+	int size_to_realloc;
 
-	next_line = NULL;
-	i = 1;
-	if (buffer[0] < 0 || BUFFER_SIZE < 0 || fd < 0)
-		return (NULL);
-	while (!contains_endl_or_eof(buffer))
-		append_next_line_and_read_buffer(&next_line, buffer, fd, i++);
-	if (*next_line == 0 && buffer[0] == -1)
-		return (free(next_line), NULL);
-	/* **********************/ 	len_next_line = ft_strlen(next_line);
-	/* Il doit y avoir moyen*/ 	next_line = realloc(next_line, len_next_line + len_untill_nl_or_eof + 1);
-	/* de faire ca mieux .. */ 	len_untill_nl_or_eof = strlen_untill(&buffer[0], '\n') + 1;
-	/* **********************/  ft_strlcat(next_line, buffer, len_next_line + len_untill_nl_or_eof + 1);
-	ft_memcpy(buffer, buffer + len_untill_nl_or_eof, BUFFER_SIZE
-			- len_untill_nl_or_eof);
-	if (buffer[BUFFER_SIZE - 1] != -1)
-		ft_memset(buffer + (BUFFER_SIZE - len_untill_nl_or_eof), 0,
-				len_untill_nl_or_eof);
-	return (next_line);
+    if (size_to_cat > *len_line )
+    {
+		if (*len_line == 0)
+			size_to_realloc = size_to_cat;
+		else
+			size_to_realloc = size_to_cat * 2;
+		(*line) = ft_realloc((*line), size_to_realloc);
+		*len_line = size_to_realloc;
+    } 
+	ft_strlcat((*line), buffer, size_to_cat);
 }
 
-#include "main.c"
- 
- //todo clean le code, puis repasser le tester
+void	loop(char **line, char *buffer, int fd,
+		int size_to_cat, int *len_line)
+{
+	append_line(line, buffer, size_to_cat, len_line);
+	read_buffer(buffer, fd);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*line;
+	size_t		i;
+	static char	buf[BUFFER_SIZE];
+	int			len_nl_or_eof;
+	int			len_line;
+	
+	line = NULL;
+	i = 1;
+    len_line = 0;
+	if (buf[0] < 0 || BUFFER_SIZE < 0 || fd < 0)
+		return (NULL);
+	while (!contains_endl_or_eof(buf))
+		loop(&line, buf, fd, (BUFFER_SIZE * i++) + 1, &len_line);
+	if (line && *line == 0 && buf[0] == -1)
+		return (free(line), NULL);
+	len_line = strlen_untill(line, 0);
+	len_nl_or_eof = strlen_untill(&buf[0], '\n') + 1;
+	append_line(&line, buf, len_line + len_nl_or_eof + 1, &len_line);
+	ft_memcpy(buf, buf + len_nl_or_eof, BUFFER_SIZE - len_nl_or_eof + 1);
+	return (line);
+}

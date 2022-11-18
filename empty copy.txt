@@ -1,4 +1,4 @@
-realloc * 2
+realloc * 2 conditionnel 
 [BUFFER_SIZE = 1]: 
 Invalid fd: 1.OK 2.OK 3.OK 
 files/empty: 1.OK 2.OK 
@@ -40,17 +40,17 @@ Invalid fd: 1.OK 2.OK 3.OK
 files/empty: 1.OK 2.OK 
 files/nl: 1.OK 2.OK 
 files/41_no_nl: 1.OK 2.OK 
-files/41_with_nl: 1.OK TIMEOUT
+files/41_with_nl: 1.OK 2.OK 3.OK 
 files/42_no_nl: 1.OK 2.OK 
-files/42_with_nl: 1.OK TIMEOUT
+files/42_with_nl: 1.OK 2.OK 3.OK 
 files/43_no_nl: 1.OK 2.OK 
-files/43_with_nl: 1.OK TIMEOUT
-files/multiple_nlx5: 1.OK TIMEOUT
-files/multiple_line_no_nl: 1.OK TIMEOUT
-files/multiple_line_with_nl: 1.OK TIMEOUT
-files/alternate_line_nl_no_nl: 1.OK TIMEOUT
-files/alternate_line_nl_with_nl: 1.OK TIMEOUT
+files/43_with_nl: 1.OK 2.OK 3.OK 
+files/multiple_nlx5: 1.OK 2.OK TIMEOUT
+files/multiple_line_no_nl: 1.OK 2.OK TIMEOUT
+files/multiple_line_with_nl: 1.OK 2.OK TIMEOUT
+files/alternate_line_nl_no_nl: 1.OK 2.OK TIMEOUT
+files/alternate_line_nl_with_nl: 1.OK 2.OK TIMEOUT
 files/big_line_no_nl: 1.OK 2.OK 
 files/big_line_with_nl: 1.OK 2.OK 
-stdin: 1.OK 
+stdin: 1.OK 2.OK 
 TIMEOUTmake: Leaving directory '/project/gnlTester'

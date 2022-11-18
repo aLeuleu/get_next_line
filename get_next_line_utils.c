@@ -6,21 +6,20 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 15:17:21 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/16 19:26:21 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/17 11:29:10 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+int	strlen_untill(char *str, char delimiter)
 {
-	size_t	i;
+	size_t	len;
 
-	i = 0;
-	if (s)
-		while (s[i])
-			i++;
-	return (i);
+	len = 0;
+	while (str && str[len] > 0 && str[len] != delimiter)
+		len++;
+	return (len);
 }
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
@@ -59,20 +58,6 @@ void	*ft_memset(void *pointer, int value, size_t count)
 	return (pointer);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*res;
-
-	if (!nmemb || !size) 
-		return (NULL);   
-	if (nmemb > SIZE_MAX / size)
-		return (NULL);
-	res = malloc(nmemb * size);
-	if (!res)
-		return (NULL);
-	return (ft_memset(res, 0, nmemb * size));
-}
-
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	i;
@@ -93,5 +78,29 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 	if (j != size)
 		dst[j + i] = '\0';
-	return (j + ft_strlen((char *)src));
+	return (j + strlen_untill((char *)src,0));
+}
+
+char	*ft_realloc(char *oldstr, size_t newstr_size)
+{
+	char	*newstr;
+
+	if (!newstr_size)
+		newstr_size = 1;
+	newstr = (char *)malloc(newstr_size * sizeof(char));
+	if (!newstr)
+		return (NULL);
+	newstr =ft_memset(newstr, 0, newstr_size * sizeof(char));
+	if (!newstr)
+	{
+		if (oldstr)
+			free(oldstr);
+		return (NULL);
+	}
+	if (oldstr)
+	{
+		ft_strlcat(newstr, oldstr, newstr_size);
+		free(oldstr);
+	}
+	return (newstr);
 }
