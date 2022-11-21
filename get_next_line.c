@@ -6,24 +6,24 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/18 18:28:01 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/21 17:26:31 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "main.c"
-#include "get_next_line_utils.c"
+
 int	contains_endl_or_eof(char *str)
 {
 	size_t	i;
 
-	i = -1;
-	while (str && str[++i])
+	i = 0;
+	while (str && str[i])
 	{
-		if (str[i] == '\n')
-			return (1);
 		if (str[i] < 0)
 			return (-1);
+		if (str[i] == '\n')
+			return (1);
+		i++;
 	}
 	return (0);
 }
@@ -38,25 +38,18 @@ void	read_buffer(char *buffer, int fd)
 
 void	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
 {
-	int size_to_realloc;
+	int	size_to_realloc;
 
-    if (size_to_cat > *len_line )
-    {
+	if (size_to_cat > *len_line)
+	{
 		if (*len_line == 0)
 			size_to_realloc = size_to_cat;
 		else
 			size_to_realloc = size_to_cat * 2;
 		(*line) = ft_realloc((*line), size_to_realloc);
 		*len_line = size_to_realloc;
-    } 
+	}
 	ft_strlcat((*line), buffer, size_to_cat);
-}
-
-void	loop(char **line, char *buffer, int fd,
-		int size_to_cat, int *len_line)
-{
-	append_line(line, buffer, size_to_cat, len_line);
-	read_buffer(buffer, fd);
 }
 
 char	*get_next_line(int fd)
@@ -66,14 +59,17 @@ char	*get_next_line(int fd)
 	static char	buf[BUFFER_SIZE];
 	int			len_nl_or_eof;
 	int			len_line;
-	
+
 	line = NULL;
 	i = 1;
-    len_line = 0;
+	len_line = 0;
 	if (buf[0] < 0 || BUFFER_SIZE < 0 || fd < 0)
 		return (NULL);
 	while (!contains_endl_or_eof(buf))
-		loop(&line, buf, fd, (BUFFER_SIZE * i++) + 1, &len_line);
+	{
+		append_line(&line, buf, (BUFFER_SIZE * i++) + 1, &len_line);
+		read_buffer(buf, fd);
+	}
 	if (line && *line == 0 && buf[0] == -1)
 		return (free(line), NULL);
 	len_line = strlen_untill(line, 0);

@@ -6,7 +6,7 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 15:17:21 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/17 11:29:10 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/21 13:26:24 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	*ft_memset(void *pointer, int value, size_t count)
 	unsigned char	*ptr;
 	size_t			i;
 
-	if (count == 0)    
-		return (NULL); 
+	if (count == 0)
+		return (NULL);
 	ptr = (unsigned char *)pointer;
 	i = 0;
 	while (i < count)
@@ -78,7 +78,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 	if (j != size)
 		dst[j + i] = '\0';
-	return (j + strlen_untill((char *)src,0));
+	return (j + strlen_untill((char *)src, 0));
 }
 
 char	*ft_realloc(char *oldstr, size_t newstr_size)
@@ -90,7 +90,7 @@ char	*ft_realloc(char *oldstr, size_t newstr_size)
 	newstr = (char *)malloc(newstr_size * sizeof(char));
 	if (!newstr)
 		return (NULL);
-	newstr =ft_memset(newstr, 0, newstr_size * sizeof(char));
+	newstr = ft_memset(newstr, 0, newstr_size * sizeof(char));
 	if (!newstr)
 	{
 		if (oldstr)

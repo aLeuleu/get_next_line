@@ -6,7 +6,7 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 00:52:45 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/17 11:39:06 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/21 13:23:57 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@
 # include <fcntl.h>
 
 char	*get_next_line(int fd);
-int     strlen_untill(char *str, char delimiter);
-void    *ft_memcpy(void *dest, const void *src, size_t n);
-void    *ft_memset(void *pointer, int value, size_t count);
-size_t  ft_strlcat(char *dst, const char *src, size_t size);
-char    *ft_realloc(char *oldstr, size_t newstr_size);
+int		strlen_untill(char *str, char delimiter);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+void	*ft_memset(void *pointer, int value, size_t count);
+size_t	ft_strlcat(char *dst, const char *src, size_t size);
+char	*ft_realloc(char *oldstr, size_t newstr_size);
 
 #endif
