@@ -6,10 +6,11 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 00:52:45 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/21 13:23:57 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/23 15:38:56 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
@@ -23,6 +24,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 
+char	*ft_strjoin(char const *s1, char const *s2);
 char	*get_next_line(int fd);
 int		strlen_untill(char *str, char delimiter);
 void	*ft_memcpy(void *dest, const void *src, size_t n);

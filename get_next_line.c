@@ -6,18 +6,21 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/21 17:26:31 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/23 16:02:40 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	contains_endl_or_eof(char *str)
+/* #include "get_next_line_utils.c"
+#include "main.c" */
+
+int	contains_endl_or_eof(char *str, int size)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (str && str[i])
+	while (str && i < size && str[i])
 	{
 		if (str[i] < 0)
 			return (-1);
@@ -47,6 +50,8 @@ void	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
 		else
 			size_to_realloc = size_to_cat * 2;
 		(*line) = ft_realloc((*line), size_to_realloc);
+		if (!*line)
+			return ;
 		*len_line = size_to_realloc;
 	}
 	ft_strlcat((*line), buffer, size_to_cat);
@@ -56,7 +61,7 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	size_t		i;
-	static char	buf[BUFFER_SIZE];
+	static char	buf[BUFFER_SIZE +1];
 	int			len_nl_or_eof;
 	int			len_line;
 
@@ -65,9 +70,9 @@ char	*get_next_line(int fd)
 	len_line = 0;
 	if (buf[0] < 0 || BUFFER_SIZE < 0 || fd < 0)
 		return (NULL);
-	while (!contains_endl_or_eof(buf))
+	while (!contains_endl_or_eof(buf, BUFFER_SIZE))
 	{
-		append_line(&line, buf, (BUFFER_SIZE * i++) + 1, &len_line);
+		append_line(&line, buf, (BUFFER_SIZE * i++), &len_line);
 		read_buffer(buf, fd);
 	}
 	if (line && *line == 0 && buf[0] == -1)
@@ -75,6 +80,9 @@ char	*get_next_line(int fd)
 	len_line = strlen_untill(line, 0);
 	len_nl_or_eof = strlen_untill(&buf[0], '\n') + 1;
 	append_line(&line, buf, len_line + len_nl_or_eof + 1, &len_line);
+/* 	printf("buf : '%s'\n", buf);
+	printf("buf + len_nl_or_eof : '%s'\n", buf + len_nl_or_eof);
+	printf("size  : '%d'\n", BUFFER_SIZE - len_nl_or_eof + 1); */
 	ft_memcpy(buf, buf + len_nl_or_eof, BUFFER_SIZE - len_nl_or_eof + 1);
 	return (line);
 }

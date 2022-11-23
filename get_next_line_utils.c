@@ -6,11 +6,12 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 15:17:21 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/21 13:26:24 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/23 15:54:47 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int	strlen_untill(char *str, char delimiter)
 {
@@ -71,7 +72,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 		return (size);
 	while (dst[j] && j < size)
 		j++;
-	while (src[i] > 0 && ((j + i + 1) < size))
+	while ((src[i] > 0) && (j + i + 1) < size)
 	{
 		dst[j + i] = src[i];
 		i++;
