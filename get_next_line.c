@@ -6,7 +6,7 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/23 16:02:40 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/23 16:21:57 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,3 +86,4 @@ char	*get_next_line(int fd)
 	ft_memcpy(buf, buf + len_nl_or_eof, BUFFER_SIZE - len_nl_or_eof + 1);
 	return (line);
 }
+
