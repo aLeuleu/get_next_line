@@ -6,13 +6,13 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 15:17:21 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/23 16:18:07 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/24 17:55:55 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	strlen_untill(char *str, char delimiter)
+int	strlen_until_gnl(char *str, char delimiter)
 {
 	size_t	len;
 
@@ -22,7 +22,7 @@ int	strlen_untill(char *str, char delimiter)
 	return (len);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memcpy_gnl(void *dest, const void *src, size_t n)
 {
 	unsigned char		*destc;
 	const unsigned char	*srcc;
@@ -41,7 +41,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-void	*ft_memset(void *pointer, int value, size_t count)
+void	*ft_memset_gnl(void *pointer, int value, size_t count)
 {
 	unsigned char	*ptr;
 	size_t			i;
@@ -58,7 +58,7 @@ void	*ft_memset(void *pointer, int value, size_t count)
 	return (pointer);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+size_t	ft_strlcat_gnl(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	j;
@@ -78,10 +78,10 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 	if (j != size)
 		dst[j + i] = '\0';
-	return (j + strlen_untill((char *)src, 0));
+	return (j + strlen_until_gnl((char *)src, 0));
 }
 
-char	*ft_realloc(char *oldstr, size_t newstr_size)
+char	*ft_realloc_gnl(char *oldstr, size_t newstr_size)
 {
 	char	*newstr;
 
@@ -90,7 +90,7 @@ char	*ft_realloc(char *oldstr, size_t newstr_size)
 	newstr = (char *)malloc(newstr_size * sizeof(char));
 	if (!newstr)
 		return (NULL);
-	newstr = ft_memset(newstr, 0, newstr_size * sizeof(char));
+	newstr = ft_memset_gnl(newstr, 0, newstr_size * sizeof(char));
 	if (!newstr)
 	{
 		if (oldstr)
@@ -99,7 +99,7 @@ char	*ft_realloc(char *oldstr, size_t newstr_size)
 	}
 	if (oldstr)
 	{
-		ft_strlcat(newstr, oldstr, newstr_size);
+		ft_strlcat_gnl(newstr, oldstr, newstr_size);
 		free(oldstr);
 	}
 	return (newstr);

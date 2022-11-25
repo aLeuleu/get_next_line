@@ -6,16 +6,13 @@
 /*   By: alevra <alevra@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 10:02:39 by alevra            #+#    #+#             */
-/*   Updated: 2022/11/23 16:21:57 by alevra           ###   ########lyon.fr   */
+/*   Updated: 2022/11/25 09:32:18 by alevra           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/* #include "get_next_line_utils.c"
-#include "main.c" */
-
-int	contains_endl_or_eof(char *str, int size)
+static int	contains_endl_or_eof(char *str, int size)
 {
 	int	i;
 
@@ -31,15 +28,23 @@ int	contains_endl_or_eof(char *str, int size)
 	return (0);
 }
 
-void	read_buffer(char *buffer, int fd)
+static int	read_buffer(char *buffer, int fd)
 {
 	int	byte_read;
 
 	byte_read = read(fd, buffer, BUFFER_SIZE);
-	ft_memset(buffer + byte_read, -1, (BUFFER_SIZE - byte_read));
+	if (byte_read < 0)
+	{
+		ft_memset_gnl(buffer, 0, BUFFER_SIZE);
+		return (0);
+	}
+	else
+		ft_memset_gnl(buffer + byte_read, -1, (BUFFER_SIZE - byte_read));
+	return (1);
 }
 
-void	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
+static void
+	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
 {
 	int	size_to_realloc;
 
@@ -49,41 +54,38 @@ void	append_line(char **line, char *buffer, int size_to_cat, int *len_line)
 			size_to_realloc = size_to_cat;
 		else
 			size_to_realloc = size_to_cat * 2;
-		(*line) = ft_realloc((*line), size_to_realloc);
+		(*line) = ft_realloc_gnl((*line), size_to_realloc);
 		if (!*line)
 			return ;
 		*len_line = size_to_realloc;
 	}
-	ft_strlcat((*line), buffer, size_to_cat);
+	ft_strlcat_gnl((*line), buffer, size_to_cat);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*line;
 	size_t		i;
-	static char	buf[BUFFER_SIZE +1];
-	int			len_nl_or_eof;
+	static char	buf[MAX_OPEN][BUFFER_SIZE +1];
+	int			len_nl_eof;
 	int			len_line;
 
 	line = NULL;
 	i = 1;
 	len_line = 0;
-	if (buf[0] < 0 || BUFFER_SIZE < 0 || fd < 0)
+	if (buf[fd][0] < 0 || BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	while (!contains_endl_or_eof(buf, BUFFER_SIZE))
+	while (!contains_endl_or_eof(buf[fd], BUFFER_SIZE))
 	{
-		append_line(&line, buf, (BUFFER_SIZE * i++), &len_line);
-		read_buffer(buf, fd);
+		append_line(&line, buf[fd], (BUFFER_SIZE * i++), &len_line);
+		if (!read_buffer(buf[fd], fd))
+			return (free(line), NULL);
 	}
-	if (line && *line == 0 && buf[0] == -1)
+	if (line && *line == 0 && buf[fd][0] == -1)
 		return (free(line), NULL);
-	len_line = strlen_untill(line, 0);
-	len_nl_or_eof = strlen_untill(&buf[0], '\n') + 1;
-	append_line(&line, buf, len_line + len_nl_or_eof + 1, &len_line);
-/* 	printf("buf : '%s'\n", buf);
-	printf("buf + len_nl_or_eof : '%s'\n", buf + len_nl_or_eof);
-	printf("size  : '%d'\n", BUFFER_SIZE - len_nl_or_eof + 1); */
-	ft_memcpy(buf, buf + len_nl_or_eof, BUFFER_SIZE - len_nl_or_eof + 1);
+	len_line = strlen_until_gnl(line, 0);
+	len_nl_eof = strlen_until_gnl(&buf[fd][0], '\n') + 1;
+	append_line(&line, buf[fd], len_line + len_nl_eof + 1, &len_line);
+	ft_memcpy_gnl(buf[fd], buf[fd] + len_nl_eof, BUFFER_SIZE - len_nl_eof + 1);
 	return (line);
 }
-
